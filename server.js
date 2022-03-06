@@ -1,9 +1,11 @@
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
 
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const port = process.env.PORT;
 const url = process.env.URI;
