@@ -1,7 +1,7 @@
 import express from "express";
-
+import usersRouter from "./Users/routes.js";
 const router = express.Router();
 
-//router.post("/" , );
+router.use("/users", usersRouter);
 
 export default router;

@@ -12,6 +12,8 @@ import { emailValidation } from "./routes/Users/schema.js";
 import pkg from "express-validation";
 const { Joi, validateAsync } = pkg;
 
+import { findUserByEmail } from "./routes/Users/service.js";
+
 dotenv.config();
 
 const port = process.env.PORT;
@@ -31,7 +33,7 @@ app.all("*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  if (e.message === "Bad request") {
+  if (err.message === "Bad request") {
     res.status(400).json({ error: { message: err.message, stack: err.stack } });
   }
 });
@@ -40,19 +42,19 @@ app.use((err, req, res, next) => {
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  const user = { email: "amine@es.dz" };
-  console.log(await emailValidation.validateAsync(user));
 });
 
 //Connection to mongoose
 
-/*mongoose
+mongoose
   .connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
     console.log("Connected to the database");
+    const user = { email: "salim@esi.dz" };
+    // const result = await findUserByEmail(user.email);
   })
   .catch((err) => {
     console.log(err);
@@ -75,4 +77,4 @@ process.on("SIGINT", () => {
     console.log("Mongoose connection closed");
     process.exit(0);
   });
-});*/
+});

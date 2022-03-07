@@ -7,9 +7,7 @@ const validateObjectId = JoiObjectId(Joi);
 
 export default {
   userSchemaValidation: Joi.object({
-    // _id: validateObjectId(),
     email: Joi.string().email({ minDomainSegments: 2 }),
-    //role: Joi.string().lowercase().valid(roleType.ADMIN, roleType.UTILISATEUR),
   }),
 };
 

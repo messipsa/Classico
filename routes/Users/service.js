@@ -23,25 +23,17 @@ const createToken = (user) => {
   return token;
 };
 
-const findUserByEmail = async (email) => {
+export const findUserByEmail = async (email) => {
   try {
+    console.log(email);
     let user = await emailValidation.validateAsync(email);
     user = await User.findOne({ email: email });
     const result = await userSchemaValidation.email.validateAsync();
     if (!user) {
       return null;
     }
-    return {
-      userName: user.userName,
-      password: user.password,
-      email: user.email,
-      _id: user._id,
-      profilePic: user.profilePic,
-      verified: user.verified,
-      suspended: user.suspended,
-      role: user.role,
-    };
-  } catch (error) {
-    return error;
+    return user;
+  } catch (err) {
+    throw new Error(err);
   }
 };
