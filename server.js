@@ -5,6 +5,13 @@ import mongoose from "mongoose";
 
 import dotenv from "dotenv";
 
+import routes from "./routes/index.js";
+
+import userSchemaValidation from "./routes/Users/schema.js";
+import { emailValidation } from "./routes/Users/schema.js";
+import pkg from "express-validation";
+const { Joi, validateAsync } = pkg;
+
 dotenv.config();
 
 const port = process.env.PORT;
@@ -15,12 +22,31 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-console.log(process.env.PORT);
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+//Routes
+
+app.use("/api", routes);
+
+app.all("*", (req, res) => {
+  throw new Error("Bad request");
 });
 
-mongoose
+app.use((err, req, res, next) => {
+  if (e.message === "Bad request") {
+    res.status(400).json({ error: { message: err.message, stack: err.stack } });
+  }
+});
+
+//Server listening
+
+app.listen(port, async () => {
+  console.log(`Server running on port ${port}`);
+  const user = { email: "amine@es.dz" };
+  console.log(await emailValidation.validateAsync(user));
+});
+
+//Connection to mongoose
+
+/*mongoose
   .connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -49,4 +75,4 @@ process.on("SIGINT", () => {
     console.log("Mongoose connection closed");
     process.exit(0);
   });
-});
+});*/

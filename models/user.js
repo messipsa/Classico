@@ -1,7 +1,8 @@
-const mongoose = require("mongoose");
-const { isEmail } = require("validator");
+import mongoose from "mongoose";
+import pkg from "validator";
+const { isEmail } = pkg;
 
-const roleType = {
+export const roleType = {
   ADMIN: "admin",
   UTILISATEUR: "utilisateur",
 };
@@ -26,6 +27,10 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
       maxlength: 1024,
     },
+    profilePic: {
+      type: mongoose.Schema.Types.String,
+      required: true,
+    },
     role: {
       type: mongoose.Schema.Types.String,
       required: true,
@@ -45,4 +50,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
