@@ -13,6 +13,7 @@ import pkg from "express-validation";
 const { Joi, validateAsync } = pkg;
 
 import { findUserByEmail } from "./routes/Users/service.js";
+import { errorHandler } from "./Middlewares/error.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(bodyParser.json());
 //Routes
 
 app.use("/api", routes);
+app.use(errorHandler);
 
 app.all("*", (req, res) => {
   throw new Error("Bad request");

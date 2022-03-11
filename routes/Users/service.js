@@ -25,15 +25,14 @@ const createToken = (user) => {
 
 export const findUserByEmail = async (email) => {
   try {
-    console.log(email);
     let user = await emailValidation.validateAsync(email);
-    user = await User.findOne({ email: email });
-    const result = await userSchemaValidation.email.validateAsync();
+    user = await User.findOne({ email: email.email });
     if (!user) {
       return null;
     }
     return user;
   } catch (err) {
+    // console.log(err);
     throw new Error(err);
   }
 };
