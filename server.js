@@ -31,6 +31,7 @@ app.use("/api", routes);
 app.use(errorHandler);
 
 app.all("*", (req, res) => {
+  //app.use(errorHandler);
   throw new Error("Bad request");
 });
 

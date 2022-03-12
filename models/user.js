@@ -53,14 +53,10 @@ const userSchema = new mongoose.Schema(
 
     followers: {
       type: [mongoose.Schema.Types.String],
-      total: mongoose.Schema.Types.Number,
-      default: 0,
     },
 
     following: {
       type: [mongoose.Schema.Types.String],
-      total: mongoose.Schema.Types.Number,
-      default: 0,
     },
   },
   {

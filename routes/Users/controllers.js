@@ -1,14 +1,24 @@
 import { findUserByEmail } from "./service.js";
 import { User } from "../../models/user.js";
 
-export const register = async (req, res) => {
+/*export const register = async (err, req, res, next) => {
   try {
-    console.log(req.body);
-    const result = await findUserByEmail(req.body);
-    return res.status(200).json({ message: "z" });
+    return res.status(200).json({ message: "zz" });
+    const result = await findUserByEmail(req.body.email);
+    return res.status(200).json({ message: "zz" });
   } catch (err) {
-    console.log(err);
+    next(err);
+  }
+};*/
 
-    return res.status(500).json({ message: err.message });
+export const register = async (req, res, next) => {
+  try {
+    const result = await findUserByEmail(req.body.email);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "user registration completed" });
+  } catch (e) {
+    next(e);
   }
 };

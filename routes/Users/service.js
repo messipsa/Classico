@@ -5,6 +5,7 @@ import { User } from "../../models/user.js";
 import userSchemaValidation from "./schema.js";
 import { emailValidation } from "./schema.js";
 import joi from "joi";
+import ErrorResponse from "../../Utils/errorResponse.js";
 
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -25,14 +26,9 @@ const createToken = (user) => {
 
 export const findUserByEmail = async (email) => {
   try {
-    let user = await emailValidation.validateAsync(email);
-    user = await User.findOne({ email: email.email });
-    if (!user) {
-      return null;
-    }
+    const user = await User.findOne({ email: email });
     return user;
   } catch (err) {
-    // console.log(err);
-    throw new Error(err);
+    throw new ErrorResponse("Server Error", 500);
   }
 };
