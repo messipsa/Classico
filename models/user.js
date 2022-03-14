@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 4,
       maxlength: 255,
+      unique: true,
     },
 
     email: {
@@ -53,10 +54,12 @@ const userSchema = new mongoose.Schema(
 
     followers: {
       type: [mongoose.Schema.Types.String],
+      ref: "User",
     },
 
     following: {
-      type: [mongoose.Schema.Types.String],
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
     },
   },
   {
@@ -64,4 +67,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("Utilisateur", userSchema);

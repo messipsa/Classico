@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 
 import routes from "./routes/index.js";
 
-import userSchemaValidation from "./routes/Users/schema.js";
+//import userSchemaValidation from "./routes/Users/schema.js";
 import { emailValidation } from "./routes/Users/schema.js";
 import pkg from "express-validation";
 const { Joi, validateAsync } = pkg;

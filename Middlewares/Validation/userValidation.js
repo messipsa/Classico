@@ -1,4 +1,7 @@
-import { emailValidation } from "../../routes/Users/schema.js";
+import {
+  emailValidation,
+  userNameValidation,
+} from "../../routes/Users/schema.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
 
 export const validateEmail = async (req, res, next) => {
@@ -7,8 +10,14 @@ export const validateEmail = async (req, res, next) => {
     next();
   } catch (err) {
     next(new ErrorResponse("Invalid Email Adress ", 422));
-    /*return res
-      .status(422)
-      .json({ success: false, message: "invalid email adress" });*/
+  }
+};
+
+export const validateUserName = async (req, res, next) => {
+  try {
+    let user = await userNameValidation(req.body);
+    next();
+  } catch (err) {
+    next(new ErrorResponse("Invalid username ", 422));
   }
 };
