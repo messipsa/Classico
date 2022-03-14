@@ -77,8 +77,8 @@ export const followUser = async (id, idToFollow) => {
     const utilisateur = await findUserById(idToFollow);
     console.log(user.followers);
     if (!user.followers.includes(idToFollow)) {
-      user.followers.push(idToFollow);
-      utilisateur.following.push(id);
+      user.following.push(idToFollow);
+      utilisateur.followers.push(id);
       await user.save();
       await utilisateur.save();
     } else {
