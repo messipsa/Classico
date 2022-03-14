@@ -7,7 +7,11 @@ import {
 } from "../../Middlewares/Validation/userValidation.js";
 import { errorHandler } from "../../Middlewares/error.js";
 import { validate, ValidationSource } from "../../Utils/validate.js";
-import { userSchemaValidation, idValidation } from "../Users/schema.js";
+import {
+  userSchemaValidation,
+  idValidation,
+  idValidationRequired,
+} from "../Users/schema.js";
 
 router.post(
   "/register",
@@ -19,7 +23,7 @@ router.post(
 router.put(
   "/follow/:id",
   validate(idValidation, ValidationSource.PARAMS),
-  validate(idValidation, ValidationSource.PARAMS),
+  validate(idValidationRequired, ValidationSource.BODY),
   follow,
   errorHandler
 );

@@ -9,6 +9,10 @@ export const idValidation = Joi.object({
   id: validateObjectId(),
 });
 
+export const idValidationRequired = Joi.object({
+  idToFollow: validateObjectId().required(),
+});
+
 export const userSchemaValidation = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
   userName: Joi.string().min(4).max(255).required(),

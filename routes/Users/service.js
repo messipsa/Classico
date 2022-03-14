@@ -43,7 +43,7 @@ export const createUser = async (username, email, motDePasse) => {
       role: roleType.ADMIN,
       verified: false,
       suspended: false,
-      followers: ["622f206eb6a9096344fd2441"],
+      followers: [],
       following: [],
     });
     return user;
@@ -71,10 +71,26 @@ export const findUserById = async (id) => {
   }
 };
 
-const suspendAccount = async (id) => {
+export const followUser = async (id, idToFollow) => {
   try {
     const user = await findUserById(id);
-    if (user) {
+    const utilisateur = await findUserById(idToFollow);
+    console.log(user.followers);
+    if (!user.followers.includes(idToFollow)) {
+      user.followers.push(idToFollow);
+      utilisateur.following.push(id);
+      await user.save();
+      await utilisateur.save();
+    } else {
+      throw new ErrorResponse("user already followed", 409);
     }
-  } catch (err) {}
+  } catch (err) {
+    if (err.statusCode === 409)
+      throw new ErrorResponse("user already followed", 409);
+    else throw new ErrorResponse("Follow failed due to Server Error", 500);
+  }
+};
+
+export const verifySameAccount = (id, idTwo) => {
+  return id === idTwo;
 };

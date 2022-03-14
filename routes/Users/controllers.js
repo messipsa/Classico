@@ -3,6 +3,8 @@ import {
   findUserByEmail,
   uniqueUserName,
   createUser,
+  followUser,
+  verifySameAccount,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
@@ -76,13 +78,27 @@ export const follow = async (req, res, next) => {
     if (!user) {
       throw new ErrorResponse("user not found", 404);
     }
-    const utilisateur = await findUserById(req.body.id);
-    if (!user) {
+
+    if (verifySameAccount(req.body.idToFollow, req.params.id) === true)
+      throw new ErrorResponse("Impossible to auto follow your account", 409);
+
+    const utilisateur = await findUserById(req.body.idToFollow);
+    if (!utilisateur) {
       throw new ErrorResponse("user to follow not found", 404);
     }
-    return res
-      .status(200)
-      .json({ success: true, message: "user suspension completed" });
+
+    console.log(user);
+    console.log(utilisateur);
+
+    if (utilisateur === user) {
+      throw new ErrorResponse("Impossible to auto follow your account", 409);
+    }
+
+    await followUser(req.params.id, req.body.idToFollow);
+    return res.status(200).json({
+      success: true,
+      message: "following operation completed with success",
+    });
   } catch (err) {
     next(err);
   }
