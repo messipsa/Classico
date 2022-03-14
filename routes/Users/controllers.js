@@ -52,3 +52,38 @@ export const suspend = async (req, res, next) => {
     next(err);
   }
 };
+
+export const allow = async (req, res, next) => {
+  try {
+    const user = await findUserById(req.params.id);
+    console.log(user);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    user.suspended = false;
+    await user.save();
+    return res
+      .status(200)
+      .json({ success: true, message: "user suspension completed" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const follow = async (req, res, next) => {
+  try {
+    const user = await findUserById(req.params.id);
+    if (!user) {
+      throw new ErrorResponse("user not found", 404);
+    }
+    const utilisateur = await findUserById(req.body.id);
+    if (!user) {
+      throw new ErrorResponse("user to follow not found", 404);
+    }
+    return res
+      .status(200)
+      .json({ success: true, message: "user suspension completed" });
+  } catch (err) {
+    next(err);
+  }
+};

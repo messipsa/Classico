@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { register, suspend } from "./controllers.js";
+import { register, suspend, allow, follow } from "./controllers.js";
 import {
   validateEmail,
   validateUserName,
@@ -17,9 +17,24 @@ router.post(
 );
 
 router.put(
+  "/follow/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  validate(idValidation, ValidationSource.PARAMS),
+  follow,
+  errorHandler
+);
+
+router.put(
   "/suspend/:id",
   validate(idValidation, ValidationSource.PARAMS),
   suspend,
+  errorHandler
+);
+
+router.put(
+  "/allow/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  allow,
   errorHandler
 );
 
