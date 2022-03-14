@@ -2,18 +2,16 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../../models/user.js";
-//import userSchemaValidation from "./schema.js";
-import { emailValidation } from "./schema.js";
-import joi from "joi";
 import ErrorResponse from "../../Utils/errorResponse.js";
+import { roleType } from "../../models/user.js";
 
-const hashPassword = async (password) => {
+export const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   const passwordHashed = await bcrypt.hash(password, salt);
   return passwordHashed;
 };
 
-const verifyPassword = async (password, hashedPassword) => {
+export const verifyPassword = async (password, hashedPassword) => {
   return bcrypt.compare(password, passwordHashed);
 };
 
@@ -33,7 +31,27 @@ export const findUserByEmail = async (email) => {
   }
 };
 
-export const createUser = async (userName, email, motDePasse) => {};
+export const createUser = async (username, email, motDePasse) => {
+  try {
+    const hashedPwd = await hashPassword(motDePasse);
+
+    const user = await User.create({
+      userName: username,
+      email: email,
+      password: hashedPwd,
+      profilePic: "lyas.png",
+      role: roleType.ADMIN,
+      verified: false,
+      suspended: false,
+      followers: ["622f206eb6a9096344fd2441"],
+      following: [],
+    });
+    return user;
+  } catch (err) {
+    console.log(err);
+    throw new ErrorResponse("User creation failed due to server Error", 500);
+  }
+};
 
 export const uniqueUserName = async (userName) => {
   try {
@@ -42,4 +60,21 @@ export const uniqueUserName = async (userName) => {
   } catch (e) {
     throw new ErrorResponse("Server Error", 500);
   }
+};
+
+export const findUserById = async (id) => {
+  try {
+    const user = await User.findOne({ _id: id });
+    return user;
+  } catch (err) {
+    throw new ErrorResponse("Server Error", 500);
+  }
+};
+
+const suspendAccount = async (id) => {
+  try {
+    const user = await findUserById(id);
+    if (user) {
+    }
+  } catch (err) {}
 };

@@ -5,6 +5,10 @@ import { roleType } from "../../models/user.js";
 
 const validateObjectId = JoiObjectId(Joi);
 
+export const idValidation = Joi.object({
+  id: validateObjectId(),
+});
+
 export const userSchemaValidation = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
   userName: Joi.string().min(4).max(255).required(),
