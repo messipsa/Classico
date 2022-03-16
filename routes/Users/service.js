@@ -74,9 +74,9 @@ export const findUserById = async (id) => {
 export const followUser = async (id, idToFollow) => {
   try {
     const user = await findUserById(id);
-    const utilisateur = await findUserById(idToFollow);
-    console.log(user.followers);
+
     if (!user.followers.includes(idToFollow)) {
+      const utilisateur = await findUserById(idToFollow);
       user.following.push(idToFollow);
       utilisateur.followers.push(id);
       await user.save();
@@ -88,6 +88,30 @@ export const followUser = async (id, idToFollow) => {
     if (err.statusCode === 409)
       throw new ErrorResponse("user already followed", 409);
     else throw new ErrorResponse("Follow failed due to Server Error", 500);
+  }
+};
+
+export const unfollowUser = async (id, idToFollow) => {
+  try {
+    const user = await findUserById(id);
+
+    if (!user.followers.includes(idToFollow)) {
+      const utilisateur = await findUserById(idToFollow);
+      user.following = user.following.filter((item) => {
+        return item !== idToFollow;
+      });
+      utilisateur.followers = utilisateur.followers.filter((item) => {
+        return item !== id;
+      });
+      await user.save();
+      await utilisateur.save();
+    } else {
+      throw new ErrorResponse("user already unfollowed", 409);
+    }
+  } catch (err) {
+    if (err.statusCode === 409)
+      throw new ErrorResponse("user already unfollowed", 409);
+    else throw new ErrorResponse("Unfollow failed due to Server Error", 500);
   }
 };
 

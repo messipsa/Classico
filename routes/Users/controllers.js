@@ -4,6 +4,7 @@ import {
   uniqueUserName,
   createUser,
   followUser,
+  unfollowUser,
   verifySameAccount,
 } from "./service.js";
 import { User } from "../../models/user.js";
@@ -98,6 +99,38 @@ export const follow = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "following operation completed with success",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const unfollow = async (req, res, next) => {
+  try {
+    const user = await findUserById(req.params.id);
+    if (!user) {
+      throw new ErrorResponse("user not found", 404);
+    }
+
+    if (verifySameAccount(req.body.idToFollow, req.params.id) === true)
+      throw new ErrorResponse("Impossible to auto unfollow your account", 409);
+
+    const utilisateur = await findUserById(req.body.idToFollow);
+    if (!utilisateur) {
+      throw new ErrorResponse("user to unfollow not found", 404);
+    }
+
+    console.log(user);
+    console.log(utilisateur);
+
+    if (utilisateur === user) {
+      throw new ErrorResponse("Impossible to auto unfollow your account", 409);
+    }
+
+    await unfollowUser(req.params.id, req.body.idToFollow);
+    return res.status(200).json({
+      success: true,
+      message: "unfollowing operation completed with success",
     });
   } catch (err) {
     next(err);
