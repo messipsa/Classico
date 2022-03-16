@@ -31,7 +31,7 @@ router.put(
 router.put(
   "/unfollow/:id",
   validate(idValidation, ValidationSource.PARAMS),
-  validate(idValidation, ValidationSource.BODY),
+  validate(idValidationRequired, ValidationSource.BODY),
   unfollow,
   errorHandler
 );

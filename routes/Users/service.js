@@ -75,7 +75,7 @@ export const followUser = async (id, idToFollow) => {
   try {
     const user = await findUserById(id);
 
-    if (!user.followers.includes(idToFollow)) {
+    if (!user.following.includes(idToFollow)) {
       const utilisateur = await findUserById(idToFollow);
       user.following.push(idToFollow);
       utilisateur.followers.push(id);
@@ -95,13 +95,14 @@ export const unfollowUser = async (id, idToFollow) => {
   try {
     const user = await findUserById(id);
 
-    if (!user.followers.includes(idToFollow)) {
+    if (user.following.includes(idToFollow)) {
       const utilisateur = await findUserById(idToFollow);
       user.following = user.following.filter((item) => {
-        return item !== idToFollow;
+        return item.toString() !== idToFollow;
       });
       utilisateur.followers = utilisateur.followers.filter((item) => {
-        return item !== id;
+        console.log(item.toString() === id);
+        return item.toString() !== id;
       });
       await user.save();
       await utilisateur.save();
@@ -109,6 +110,7 @@ export const unfollowUser = async (id, idToFollow) => {
       throw new ErrorResponse("user already unfollowed", 409);
     }
   } catch (err) {
+    console.log("payloch");
     if (err.statusCode === 409)
       throw new ErrorResponse("user already unfollowed", 409);
     else throw new ErrorResponse("Unfollow failed due to Server Error", 500);

@@ -15,7 +15,7 @@ export const errorHandler = (err, req, res, next) => {
     const msg = Object.values(err.errors).map((e) => e.message);
     error = new ErrorResponse(400, msg);
   }
-
+  console.log(err);
   console.log(
     "-----------------------------------------------------------------------"
   );

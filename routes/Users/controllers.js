@@ -120,9 +120,6 @@ export const unfollow = async (req, res, next) => {
       throw new ErrorResponse("user to unfollow not found", 404);
     }
 
-    console.log(user);
-    console.log(utilisateur);
-
     if (utilisateur === user) {
       throw new ErrorResponse("Impossible to auto unfollow your account", 409);
     }
@@ -133,6 +130,7 @@ export const unfollow = async (req, res, next) => {
       message: "unfollowing operation completed with success",
     });
   } catch (err) {
+    console.log("payloch2");
     next(err);
   }
 };
