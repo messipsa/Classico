@@ -7,7 +7,7 @@ import routes from "./routes/index.js";
 import pkg from "express-validation";
 const { Joi, validateAsync } = pkg;
 import { sendEmail } from "./Utils/sendEmail.js";
-import { findUserByEmail, verify } from "./routes/Users/service.js";
+import { findUserByEmail } from "./routes/Users/service.js";
 
 dotenv.config();
 
@@ -19,6 +19,7 @@ const app = express();
 const user = {
   _id: "hhcjg6656ce6c4",
   email: "kassimbacha1000@gmail.com",
+  confirmationCode: "a1b89dc2",
 };
 //verify(user);
 

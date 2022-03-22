@@ -134,8 +134,15 @@ export const unfollow = async (req, res, next) => {
   }
 };
 
-export const verifyAccount = (email) => {
+export const verifyAccount = (req, res, next) => {
   try {
+    const user = findUserById(req.query.id);
+    if (!user) {
+      throw new ErrorResponse("user not found", 404);
+    }
+    if (user.verified) {
+      throw new ErrorResponse("email already verified", 400);
+    }
   } catch (err) {
     next(err);
   }

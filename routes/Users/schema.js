@@ -26,3 +26,8 @@ export const emailValidation = Joi.object({
 export const userNameValidation = Joi.object({
   userName: Joi.string().min(4).max(255).required(),
 });
+
+export const codeValidation = Joi.object({
+  id: validateObjectId(),
+  code: Joi.string().hex().min(8).max(8).required(),
+});

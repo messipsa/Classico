@@ -11,6 +11,7 @@ import {
   userSchemaValidation,
   idValidation,
   idValidationRequired,
+  codeValidation,
 } from "../Users/schema.js";
 
 router.post(
@@ -47,6 +48,16 @@ router.put(
   "/allow/:id",
   validate(idValidation, ValidationSource.PARAMS),
   allow,
+  errorHandler
+);
+
+router.get(
+  "/confirmation/verify",
+  validate(codeValidation, ValidationSource.QUERY),
+  (req, res) => {
+    console.log(req.query);
+    res.send("<p>Salim</p>");
+  },
   errorHandler
 );
 

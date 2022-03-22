@@ -46,6 +46,10 @@ export const createUser = async (username, email, motDePasse) => {
       suspended: false,
       followers: [],
       following: [],
+      confirmationCode: randomstring.generate({
+        length: 8,
+        charset: "hex",
+      }),
     });
     return user;
   } catch (err) {
@@ -121,19 +125,12 @@ export const verifySameAccount = (id, idTwo) => {
   return id === idTwo;
 };
 
-export const verify = (user) => {
+export const sendURL = (user) => {
   try {
-    const baseURL = "http://localhost:3000/confirmation/";
+    const baseURL = "http://localhost:5000/confirmation/";
 
     const URL =
-      baseURL +
-      "verify?id=" +
-      user._id +
-      "&code=" +
-      randomstring.generate({
-        length: 8,
-        charset: "hex",
-      });
+      baseURL + "verify?id=" + user._id + "&code=" + user.confirmationCode;
 
     const options = {
       email: user.email,

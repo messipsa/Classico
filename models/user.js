@@ -65,10 +65,6 @@ const userSchema = new mongoose.Schema(
     confirmationCode: {
       type: mongoose.Schema.Types.String,
     },
-
-    confirmationCodeTTL: {
-      type: mongoose.Schema.Types.Date,
-    },
   },
   {
     timestamps: true,
