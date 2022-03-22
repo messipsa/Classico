@@ -4,6 +4,7 @@ import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
 import { roleType } from "../../models/user.js";
 import { sendEmail } from "../../Utils/sendEmail.js";
+import randomstring from "randomstring";
 
 export const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -121,15 +122,27 @@ export const verifySameAccount = (id, idTwo) => {
 };
 
 export const verify = (user) => {
-  const date = new Date();
-  const mail = {
-    id: user._id,
-    created: date.toString(),
-  };
+  try {
+    const baseURL = "http://localhost:3000/confirmation/";
 
-  const token_mail_verification = jwt.sign(mail, user.email, {
-    expiresIn: "1d",
-  });
+    const URL =
+      baseURL +
+      "verify?id=" +
+      user._id +
+      "&code=" +
+      randomstring.generate({
+        length: 8,
+        charset: "hex",
+      });
 
-  console.log(token_mail_verification);
+    const options = {
+      email: user.email,
+      message: `To confirm your email please click on this link : <a href=${URL}>${URL}</a> `,
+      subject: "Verification of email",
+    };
+
+    sendEmail(options);
+  } catch (err) {
+    throw new ErrorResponse("vérification failed due to server error", 500);
+  }
 };

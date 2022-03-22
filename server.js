@@ -2,18 +2,11 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-
 import dotenv from "dotenv";
-
 import routes from "./routes/index.js";
-
-//import userSchemaValidation from "./routes/Users/schema.js";
-import { emailValidation } from "./routes/Users/schema.js";
-import randomstring from "randomstring";
 import pkg from "express-validation";
 const { Joi, validateAsync } = pkg;
 import { sendEmail } from "./Utils/sendEmail.js";
-
 import { findUserByEmail, verify } from "./routes/Users/service.js";
 
 dotenv.config();
@@ -23,23 +16,11 @@ const url = process.env.URI;
 
 const app = express();
 
-const options = {
-  email: "kassimbacha1000@gmail.com",
-  message: "Mafihach HADIM ",
-  subject: "Verification of email",
-};
-
-const ls = randomstring.generate({
-  length: 8,
-  charset: "hex",
-});
-
-console.log(ls);
 const user = {
   _id: "hhcjg6656ce6c4",
-  email: "karim@esi.dz",
+  email: "kassimbacha1000@gmail.com",
 };
-verify(user);
+//verify(user);
 
 //sendEmail(options);
 
