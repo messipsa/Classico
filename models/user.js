@@ -61,6 +61,14 @@ const userSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
     },
+
+    confirmationCode: {
+      type: mongoose.Schema.Types.String,
+    },
+
+    confirmationCodeTTL: {
+      type: mongoose.Schema.Types.Date,
+    },
   },
   {
     timestamps: true,

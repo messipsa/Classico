@@ -1,9 +1,9 @@
-import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
 import { roleType } from "../../models/user.js";
+import { sendEmail } from "../../Utils/sendEmail.js";
 
 export const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -110,7 +110,6 @@ export const unfollowUser = async (id, idToFollow) => {
       throw new ErrorResponse("user already unfollowed", 409);
     }
   } catch (err) {
-    console.log("payloch");
     if (err.statusCode === 409)
       throw new ErrorResponse("user already unfollowed", 409);
     else throw new ErrorResponse("Unfollow failed due to Server Error", 500);
@@ -119,4 +118,18 @@ export const unfollowUser = async (id, idToFollow) => {
 
 export const verifySameAccount = (id, idTwo) => {
   return id === idTwo;
+};
+
+export const verify = (user) => {
+  const date = new Date();
+  const mail = {
+    id: user._id,
+    created: date.toString(),
+  };
+
+  const token_mail_verification = jwt.sign(mail, user.email, {
+    expiresIn: "1d",
+  });
+
+  console.log(token_mail_verification);
 };

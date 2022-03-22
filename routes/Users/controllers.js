@@ -29,7 +29,7 @@ export const register = async (req, res, next) => {
       req.body.password
     );
     console.log(usr);
-    const user = await findB;
+    //const user = await findB;
     return res
       .status(200)
       .json({ success: true, message: "user registration completed" });
@@ -130,7 +130,13 @@ export const unfollow = async (req, res, next) => {
       message: "unfollowing operation completed with success",
     });
   } catch (err) {
-    console.log("payloch2");
+    next(err);
+  }
+};
+
+export const verifyAccount = (email) => {
+  try {
+  } catch (err) {
     next(err);
   }
 };
