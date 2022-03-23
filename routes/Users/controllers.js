@@ -6,6 +6,7 @@ import {
   followUser,
   unfollowUser,
   verifySameAccount,
+  sendURL,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
@@ -134,14 +135,41 @@ export const unfollow = async (req, res, next) => {
   }
 };
 
-export const verifyAccount = (req, res, next) => {
+export const sendConfirmationEmail = async (req, res, next) => {
   try {
-    const user = findUserById(req.query.id);
+    const user = await findUserById(req.params.id);
+    if (!user) {
+      throw new ErrorResponse("user not found", 404);
+    }
+    sendURL(user);
+    res.status(200).json({
+      success: true,
+      message: "Confirmation email sent successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const verifyAccount = async (req, res, next) => {
+  try {
+    let user = findUserById(req.query.id);
     if (!user) {
       throw new ErrorResponse("user not found", 404);
     }
     if (user.verified) {
       throw new ErrorResponse("email already verified", 400);
+    }
+    if (user.confirmationCode === req.query.code) {
+      user = await User.findByIdAndUpdate(req.query.id, {
+        confirmationCode: true,
+      });
+      res.status("200").json({
+        success: true,
+        message: "Account verification completed successfullly",
+      });
+    } else {
+      throw new ErrorResponse("Wrong confirmation code", 400);
     }
   } catch (err) {
     next(err);

@@ -1,6 +1,14 @@
 import express from "express";
 const router = express.Router();
-import { register, suspend, allow, follow, unfollow } from "./controllers.js";
+import {
+  register,
+  suspend,
+  allow,
+  follow,
+  unfollow,
+  sendConfirmationEmail,
+  verifyAccount,
+} from "./controllers.js";
 import {
   validateEmail,
   validateUserName,
@@ -51,13 +59,17 @@ router.put(
   errorHandler
 );
 
+router.post(
+  "/sendConfirmationEmail/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  sendConfirmationEmail,
+  errorHandler
+);
+
 router.get(
-  "/confirmation/verify",
+  "/confirmation/verif",
   validate(codeValidation, ValidationSource.QUERY),
-  (req, res) => {
-    console.log(req.query);
-    res.send("<p>Salim</p>");
-  },
+  verifyAccount,
   errorHandler
 );
 
