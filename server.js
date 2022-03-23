@@ -11,6 +11,8 @@ import { findUserByEmail } from "./routes/Users/service.js";
 
 dotenv.config();
 
+console.log(process.cwd());
+
 const port = process.env.PORT;
 const url = process.env.URI;
 

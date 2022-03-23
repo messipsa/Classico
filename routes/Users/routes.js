@@ -8,6 +8,7 @@ import {
   unfollow,
   sendConfirmationEmail,
   verifyAccount,
+  login,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -20,12 +21,19 @@ import {
   idValidation,
   idValidationRequired,
   codeValidation,
+  loginSchemaValidation,
 } from "../Users/schema.js";
 
 router.post(
   "/register",
   validate(userSchemaValidation, ValidationSource.BODY),
   register,
+  errorHandler
+);
+
+router.post(
+  "/login",
+  validate(loginSchemaValidation, ValidationSource.BODY),
   errorHandler
 );
 
@@ -67,7 +75,7 @@ router.post(
 );
 
 router.get(
-  "/confirmation/verif",
+  "/confirmation/verify",
   validate(codeValidation, ValidationSource.QUERY),
   verifyAccount,
   errorHandler

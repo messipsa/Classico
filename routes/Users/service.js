@@ -16,7 +16,7 @@ export const verifyPassword = async (password, hashedPassword) => {
   return bcrypt.compare(password, passwordHashed);
 };
 
-const createToken = (user) => {
+export const createToken = (user) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_TOKEN, {
     expiresIn: 24 * 60 * 60 * 1000,
   });
@@ -127,7 +127,7 @@ export const verifySameAccount = (id, idTwo) => {
 
 export const sendURL = (user) => {
   try {
-    const baseURL = "http://localhost:5000/confirmation/";
+    const baseURL = "http://localhost:5000/api/users/confirmation/";
 
     const URL =
       baseURL + "verify?id=" + user._id + "&code=" + user.confirmationCode;

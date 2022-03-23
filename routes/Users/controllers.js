@@ -1,3 +1,5 @@
+import path from "path";
+import lodash from "lodash";
 import {
   findUserById,
   findUserByEmail,
@@ -7,20 +9,53 @@ import {
   unfollowUser,
   verifySameAccount,
   sendURL,
+  verifyPassword,
+  createToken,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
+
+export const login = async (req, res, next) => {
+  try {
+    const user = await findUserByEmail(req.body.email);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    const match = verifyPassword(req.body.password, user.password);
+    if (!match) {
+      throw new ErrorResponse("Wrong password", 400);
+    }
+    const token = createToken(user);
+    const options = {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    };
+    return res
+      .status(200)
+      .cookie("token", token, options)
+      .json({
+        success: true,
+        message: "Connexion established with success",
+        token,
+        options,
+        user: lodash.omit(user, ["_id", "password"]),
+      });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const register = async (req, res, next) => {
   try {
     const result = await findUserByEmail(req.body.email);
     if (result) {
-      next(new ErrorResponse("an account already exists with this email", 409));
+      throw new ErrorResponse("an account already exists with this email", 409);
     }
     const name = await uniqueUserName(req.body.userName);
     if (name) {
-      next(
-        new ErrorResponse("an account already exists with this userName", 409)
+      throw new ErrorResponse(
+        "an account already exists with this userName",
+        409
       );
     }
 
@@ -153,7 +188,11 @@ export const sendConfirmationEmail = async (req, res, next) => {
 
 export const verifyAccount = async (req, res, next) => {
   try {
-    let user = findUserById(req.query.id);
+    console.log(process.cwd());
+    res.sendFile(path.join(process.cwd(), "/email.html"));
+    //res.sendFile("../../static/verifyAccount.html");
+    let user = await findUserById(req.query.id);
+    console.log(req.query.id);
     if (!user) {
       throw new ErrorResponse("user not found", 404);
     }
@@ -162,12 +201,15 @@ export const verifyAccount = async (req, res, next) => {
     }
     if (user.confirmationCode === req.query.code) {
       user = await User.findByIdAndUpdate(req.query.id, {
-        confirmationCode: true,
+        verified: true,
       });
-      res.status("200").json({
-        success: true,
-        message: "Account verification completed successfullly",
-      });
+      res
+        .status("200")
+        .json({
+          success: true,
+          message: "Account verification completed successfullly",
+        })
+        .send("../../static/verifyAccount.html");
     } else {
       throw new ErrorResponse("Wrong confirmation code", 400);
     }

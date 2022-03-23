@@ -31,3 +31,8 @@ export const codeValidation = Joi.object({
   id: validateObjectId(),
   code: Joi.string().hex().min(8).max(8).required(),
 });
+
+export const loginSchemaValidation = Joi.object({
+  email: Joi.string().email({ minDomainSegments: 2 }).required(),
+  password: Joi.string().min(6).max(255).required(),
+});
