@@ -28,7 +28,7 @@ export const userNameValidation = Joi.object({
 });
 
 export const codeValidation = Joi.object({
-  id: validateObjectId(),
+  id: Joi.string(),
   code: Joi.string().hex().min(8).max(8).required(),
 });
 

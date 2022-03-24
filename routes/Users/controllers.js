@@ -11,6 +11,7 @@ import {
   sendURL,
   verifyPassword,
   createToken,
+  getIDFromToken,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
@@ -40,6 +41,25 @@ export const login = async (req, res, next) => {
         options,
         user: lodash.omit(user, ["_id", "password"]),
       });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const logout = (req, res, next) => {
+  try {
+    const options = {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    };
+    res.cookie("token", "none", options);
+
+    return res.status(200).json({
+      succes: true,
+      message: "Utilisateur déconnecté",
+      options: options,
+      token: "none",
+    });
   } catch (err) {
     next(err);
   }
@@ -188,11 +208,9 @@ export const sendConfirmationEmail = async (req, res, next) => {
 
 export const verifyAccount = async (req, res, next) => {
   try {
-    console.log(process.cwd());
-    res.sendFile(path.join(process.cwd(), "/email.html"));
-    //res.sendFile("../../static/verifyAccount.html");
-    let user = await findUserById(req.query.id);
-    console.log(req.query.id);
+    let id = await getIDFromToken(req.query.id);
+    console.log(id);
+    let user = await findUserById(id);
     if (!user) {
       throw new ErrorResponse("user not found", 404);
     }
@@ -209,7 +227,7 @@ export const verifyAccount = async (req, res, next) => {
           success: true,
           message: "Account verification completed successfullly",
         })
-        .send("../../static/verifyAccount.html");
+        .sendFile(path.join(process.cwd(), "/email.html"));
     } else {
       throw new ErrorResponse("Wrong confirmation code", 400);
     }

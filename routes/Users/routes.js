@@ -37,6 +37,8 @@ router.post(
   errorHandler
 );
 
+router.post("/logout", errorHandler);
+
 router.put(
   "/follow/:id",
   validate(idValidation, ValidationSource.PARAMS),
