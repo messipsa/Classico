@@ -28,8 +28,8 @@ export const userNameValidation = Joi.object({
 });
 
 export const codeValidation = Joi.object({
-  id: Joi.string(),
-  code: Joi.string().hex().min(8).max(8).required(),
+  code: validateObjectId().required(),
+  id: Joi.string().hex().min(8).max(8).required(),
 });
 
 export const loginSchemaValidation = Joi.object({

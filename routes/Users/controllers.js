@@ -11,7 +11,6 @@ import {
   sendURL,
   verifyPassword,
   createToken,
-  getIDFromToken,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
@@ -22,10 +21,17 @@ export const login = async (req, res, next) => {
     if (!user) {
       throw new ErrorResponse("User not found", 404);
     }
-    const match = verifyPassword(req.body.password, user.password);
+    if (user.suspended) {
+      throw new ErrorResponse("Suspended account", 400);
+    }
+    if (!user.verified) {
+      throw new ErrorResponse("Unverified account", 400);
+    }
+    const match = await verifyPassword(req.body.password, user.password);
     if (!match) {
       throw new ErrorResponse("Wrong password", 400);
     }
+
     const token = createToken(user);
     const options = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -56,7 +62,7 @@ export const logout = (req, res, next) => {
 
     return res.status(200).json({
       succes: true,
-      message: "Utilisateur déconnecté",
+      message: "User disconnected",
       options: options,
       token: "none",
     });
@@ -196,7 +202,7 @@ export const sendConfirmationEmail = async (req, res, next) => {
     if (!user) {
       throw new ErrorResponse("user not found", 404);
     }
-    sendURL(user);
+    await sendURL(user);
     res.status(200).json({
       success: true,
       message: "Confirmation email sent successfully",
@@ -208,19 +214,21 @@ export const sendConfirmationEmail = async (req, res, next) => {
 
 export const verifyAccount = async (req, res, next) => {
   try {
-    let id = await getIDFromToken(req.query.id);
-    console.log(id);
-    let user = await findUserById(id);
+    let user = await findUserById(req.query.code);
+
     if (!user) {
       throw new ErrorResponse("user not found", 404);
     }
+
     if (user.verified) {
       throw new ErrorResponse("email already verified", 400);
     }
-    if (user.confirmationCode === req.query.code) {
-      user = await User.findByIdAndUpdate(req.query.id, {
+    if (user.confirmationCode === req.query.id) {
+      res.sendFile(path.join(process.cwd(), "/email.html"));
+      user = await User.findByIdAndUpdate(req.query.code, {
         verified: true,
       });
+
       res
         .status("200")
         .json({

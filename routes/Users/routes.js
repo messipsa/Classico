@@ -9,6 +9,7 @@ import {
   sendConfirmationEmail,
   verifyAccount,
   login,
+  logout,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -34,10 +35,11 @@ router.post(
 router.post(
   "/login",
   validate(loginSchemaValidation, ValidationSource.BODY),
+  login,
   errorHandler
 );
 
-router.post("/logout", errorHandler);
+router.post("/logout", logout, errorHandler);
 
 router.put(
   "/follow/:id",

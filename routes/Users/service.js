@@ -13,7 +13,7 @@ export const hashPassword = async (password) => {
 };
 
 export const verifyPassword = async (password, hashedPassword) => {
-  return bcrypt.compare(password, passwordHashed);
+  return bcrypt.compare(password, hashedPassword);
 };
 
 export const createToken = (user) => {
@@ -125,18 +125,12 @@ export const verifySameAccount = (id, idTwo) => {
   return id === idTwo;
 };
 
-export const sendURL = (user) => {
+export const sendURL = async (user) => {
   try {
     const baseURL = "http://localhost:5000/api/users/confirmation/";
-    var date = new Date();
-    var mail = {
-      id: user._id,
-      created: date.toString(),
-    };
-    const tok = jwt.sign(mail, process.env.JWT_Token, { expiresIn: "1d" });
-    console.log(tok);
 
-    const URL = baseURL + "verify?id=" + tok + "&code=" + user.confirmationCode;
+    const URL =
+      baseURL + "verify?code=" + user._id + "&id=" + user.confirmationCode;
 
     const options = {
       email: user.email,
@@ -150,21 +144,16 @@ export const sendURL = (user) => {
   }
 };
 
-export const getIDFromToken = async (token) => {
+/*export const getIDFromToken = async (token) => {
   try {
     jwt.verify(token, process.env.JWT_TOKEN, (e, dec) => {
-      console.log("laman //////////////");
-      console.log(e);
-      console.log("laman //////////////");
-      console.log(dec.id);
       if (e) {
         throw new ErrorResponse("Verification failed ", 400);
       }
       let id = dec.id;
-      console.log("Zed " + id);
       return id;
     });
   } catch (err) {
     throw new ErrorResponse("Verification failed due to server error", 500);
   }
-};
+};*/
