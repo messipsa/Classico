@@ -11,13 +11,14 @@ import {
   sendURL,
   verifyPassword,
   createToken,
+  findAllUsers,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
 
 export const login = async (req, res, next) => {
   try {
-    const user = await findUserByEmail(req.body.email);
+    let user = await findUserByEmail(req.body.email);
     if (!user) {
       throw new ErrorResponse("User not found", 404);
     }
@@ -45,7 +46,16 @@ export const login = async (req, res, next) => {
         message: "Connexion established with success",
         token,
         options,
-        user: lodash.omit(user, ["_id", "password"]),
+        user: lodash.pick(user, [
+          "userName",
+          "email",
+          "profilePic",
+          "role",
+          "verified",
+          "suspended",
+          "followers",
+          "following",
+        ]),
       });
   } catch (err) {
     next(err);
@@ -239,6 +249,47 @@ export const verifyAccount = async (req, res, next) => {
     } else {
       throw new ErrorResponse("Wrong confirmation code", 400);
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await findAllUsers();
+    if (!users) {
+      throw new ErrorResponse("Users not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "getting all users completed successfully",
+      users,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getUser = async (req, res, next) => {
+  try {
+    let user = await findUserById(req.params.id);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "getting user completed successfully",
+      user: lodash.pick(user, [
+        "userName",
+        "email",
+        "profilePic",
+        "role",
+        "verified",
+        "suspended",
+        "followers",
+        "following",
+      ]),
+    });
   } catch (err) {
     next(err);
   }

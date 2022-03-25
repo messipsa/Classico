@@ -10,6 +10,8 @@ import {
   verifyAccount,
   login,
   logout,
+  getAllUsers,
+  getUser,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -82,6 +84,15 @@ router.get(
   "/confirmation/verify",
   validate(codeValidation, ValidationSource.QUERY),
   verifyAccount,
+  errorHandler
+);
+
+router.get("/", getAllUsers, errorHandler);
+
+router.get(
+  "/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  getUser,
   errorHandler
 );
 

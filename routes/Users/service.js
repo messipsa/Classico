@@ -144,16 +144,17 @@ export const sendURL = async (user) => {
   }
 };
 
-/*export const getIDFromToken = async (token) => {
+export const findAllUsers = async () => {
   try {
-    jwt.verify(token, process.env.JWT_TOKEN, (e, dec) => {
-      if (e) {
-        throw new ErrorResponse("Verification failed ", 400);
-      }
-      let id = dec.id;
-      return id;
+    const users = await User.find().select({
+      password: 0,
+      confirmationCode: 0,
     });
+    return users;
   } catch (err) {
-    throw new ErrorResponse("Verification failed due to server error", 500);
+    throw new ErrorResponse(
+      "Finding all users failed due to server error",
+      500
+    );
   }
-};*/
+};
