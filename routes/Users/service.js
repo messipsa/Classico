@@ -44,8 +44,6 @@ export const createUser = async (username, email, motDePasse) => {
       role: roleType.ADMIN,
       verified: false,
       suspended: false,
-      followers: [],
-      following: [],
       confirmationCode: randomstring.generate({
         length: 8,
         charset: "hex",
@@ -70,6 +68,7 @@ export const uniqueUserName = async (userName) => {
 export const findUserById = async (id) => {
   try {
     const user = await User.findOne({ _id: id });
+
     return user;
   } catch (err) {
     throw new ErrorResponse("Server Error", 500);
@@ -103,9 +102,11 @@ export const unfollowUser = async (id, idToFollow) => {
     if (user.following.includes(idToFollow)) {
       const utilisateur = await findUserById(idToFollow);
       user.following = user.following.filter((item) => {
+        console.log(item.toString());
         return item.toString() !== idToFollow;
       });
       utilisateur.followers = utilisateur.followers.filter((item) => {
+        console.log(item.toString());
         console.log(item.toString() === id);
         return item.toString() !== id;
       });
@@ -156,5 +157,18 @@ export const findAllUsers = async () => {
       "Finding all users failed due to server error",
       500
     );
+  }
+};
+
+export const findUserByIdAndPopulate = async (id) => {
+  try {
+    const user = await User.findOne({ _id: id })
+      .populate({
+        path: "following",
+      })
+      .populate({ path: "followers" }); //.populate("followers");
+    return user;
+  } catch (err) {
+    throw new ErrorResponse("Server Error", 500);
   }
 };

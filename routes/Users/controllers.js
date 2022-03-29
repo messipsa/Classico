@@ -12,6 +12,7 @@ import {
   verifyPassword,
   createToken,
   findAllUsers,
+  findUserByIdAndPopulate,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
@@ -104,7 +105,7 @@ export const register = async (req, res, next) => {
     //const user = await findB;
     return res
       .status(200)
-      .json({ success: true, message: "user registration completed" });
+      .json({ success: true, message: "user registration completed", usr });
   } catch (e) {
     console.log("salim");
     next(e);
@@ -272,7 +273,8 @@ export const getAllUsers = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
   try {
-    let user = await findUserById(req.params.id);
+    let user = await findUserByIdAndPopulate(req.params.id);
+    console.log(user);
     if (!user) {
       throw new ErrorResponse("User not found", 404);
     }

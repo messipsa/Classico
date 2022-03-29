@@ -52,15 +52,23 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    followers: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User",
-    },
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Utilisateur",
+        required: true,
+        default: [],
+      },
+    ],
 
-    following: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User",
-    },
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Utilisateur",
+        required: true,
+        default: [],
+      },
+    ],
 
     confirmationCode: {
       type: mongoose.Schema.Types.String,
