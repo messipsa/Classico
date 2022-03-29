@@ -13,6 +13,7 @@ import {
   createToken,
   findAllUsers,
   findUserByIdAndPopulate,
+  updateBio,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
@@ -291,6 +292,19 @@ export const getUser = async (req, res, next) => {
         "followers",
         "following",
       ]),
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateBiog = async (req, res, next) => {
+  try {
+    const user = await updateBio(req.params.id, req.body.bio);
+    res.status(200).json({
+      success: true,
+      message: "updating user's bio completed successfully",
+      user,
     });
   } catch (err) {
     next(err);

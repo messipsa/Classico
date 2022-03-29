@@ -36,3 +36,7 @@ export const loginSchemaValidation = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
   password: Joi.string().min(6).max(255).required(),
 });
+
+export const bioValidation = Joi.object({
+  bio: Joi.string().max(1024).required(),
+});

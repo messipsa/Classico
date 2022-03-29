@@ -73,6 +73,12 @@ const userSchema = new mongoose.Schema(
     confirmationCode: {
       type: mongoose.Schema.Types.String,
     },
+
+    bio: {
+      type: mongoose.Schema.Types.String,
+      maxlength: 1024,
+      default: "",
+    },
   },
   {
     timestamps: true,

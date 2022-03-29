@@ -12,6 +12,7 @@ import {
   logout,
   getAllUsers,
   getUser,
+  updateBiog,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -25,6 +26,7 @@ import {
   idValidationRequired,
   codeValidation,
   loginSchemaValidation,
+  bioValidation,
 } from "../Users/schema.js";
 
 router.post(
@@ -93,6 +95,14 @@ router.get(
   "/:id",
   validate(idValidation, ValidationSource.PARAMS),
   getUser,
+  errorHandler
+);
+
+router.put(
+  "/updateBio/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  validate(bioValidation, ValidationSource.BODY),
+  updateBiog,
   errorHandler
 );
 

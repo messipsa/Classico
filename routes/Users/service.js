@@ -147,10 +147,15 @@ export const sendURL = async (user) => {
 
 export const findAllUsers = async () => {
   try {
-    const users = await User.find().select({
-      password: 0,
-      confirmationCode: 0,
-    });
+    const users = await User.find()
+      .select({
+        password: 0,
+        confirmationCode: 0,
+      })
+      .populate({
+        path: "following",
+      })
+      .populate({ path: "followers" });
     return users;
   } catch (err) {
     throw new ErrorResponse(
@@ -169,6 +174,23 @@ export const findUserByIdAndPopulate = async (id) => {
       .populate({ path: "followers" }); //.populate("followers");
     return user;
   } catch (err) {
+    throw new ErrorResponse("Server Error", 500);
+  }
+};
+
+export const updateBio = async (id, Bio) => {
+  try {
+    const user = await findUserById(id);
+    console.log(user);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    user.bio = Bio;
+    await user.save();
+  } catch (err) {
+    if (err.statusCode === 404) {
+      throw new ErrorResponse("User not found", 404);
+    }
     throw new ErrorResponse("Server Error", 500);
   }
 };
