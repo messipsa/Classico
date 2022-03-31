@@ -112,7 +112,7 @@ router.put(
   "/upload/profilepicture/:id",
   validate(idValidation, ValidationSource.PARAMS),
   (req, res, next) => {
-    console.log(req.params.id);
+    console.log(req.body);
     next();
   },
   ProfilPictureUpload.single("profilePic"),

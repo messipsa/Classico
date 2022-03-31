@@ -321,18 +321,18 @@ export const updateProfilPicture = async (req, res, next) => {
     if (!req.file) {
       throw new ErrorResponse("File not found", 400);
     }
-    let result = cloudinary.uploader.upload(req.file.path);
+    let result = await cloudinary.uploader.upload(req.file.path);
 
-    const updatedUser = await User.findByIdAndUpdate(
-      user._id,
-      { profilPicture: result.url },
-      { new: true }
-    );
+    console.log(result);
+
+    user.profilePic = result.url;
+
+    await user.save();
 
     res.status(200).json({
       success: true,
       message: "Uploading profile pictute worked successfully",
-      updatedUser,
+      user,
     });
   } catch (err) {
     next(err);

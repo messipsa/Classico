@@ -3,6 +3,7 @@ import ErrorResponse from "../Utils/errorResponse.js";
 export const errorHandler = (err, req, res, next) => {
   console.log(err.statusCode);
   let error = { ...err };
+  console.log(err.msg);
   error.message = err.message;
   //error.statusCode = err.statusCode;
   console.log("err.name = " + err.name);
@@ -15,6 +16,7 @@ export const errorHandler = (err, req, res, next) => {
     const msg = Object.values(err.errors).map((e) => e.message);
     error = new ErrorResponse(400, msg);
   }
+
   console.log(err);
   console.log(
     "-----------------------------------------------------------------------"

@@ -40,7 +40,7 @@ export const createUser = async (username, email, motDePasse) => {
       userName: username,
       email: email,
       password: hashedPwd,
-      profilePic: "lyas.png",
+      profilePic: "",
       role: roleType.ADMIN,
       verified: false,
       suspended: false,
