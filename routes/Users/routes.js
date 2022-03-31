@@ -13,6 +13,7 @@ import {
   getAllUsers,
   getUser,
   updateBiog,
+  updateProfilPicture,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -28,6 +29,7 @@ import {
   loginSchemaValidation,
   bioValidation,
 } from "../Users/schema.js";
+import { ProfilPictureUpload } from "../../core/multer.js";
 
 router.post(
   "/register",
@@ -103,6 +105,18 @@ router.put(
   validate(idValidation, ValidationSource.PARAMS),
   validate(bioValidation, ValidationSource.BODY),
   updateBiog,
+  errorHandler
+);
+
+router.put(
+  "/upload/profilepicture/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  (req, res, next) => {
+    console.log(req.params.id);
+    next();
+  },
+  ProfilPictureUpload.single("profilePic"),
+  updateProfilPicture,
   errorHandler
 );
 

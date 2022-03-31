@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
     profilePic: {
       type: mongoose.Schema.Types.String,
       required: true,
+      default: "",
     },
 
     role: {

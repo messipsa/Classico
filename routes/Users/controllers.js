@@ -17,6 +17,7 @@ import {
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
+import cloudinary from "../../core/cloudinary.js";
 
 export const login = async (req, res, next) => {
   try {
@@ -305,6 +306,33 @@ export const updateBiog = async (req, res, next) => {
       success: true,
       message: "updating user's bio completed successfully",
       user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateProfilPicture = async (req, res, next) => {
+  try {
+    const user = await findUserById(req.params.id);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    if (!req.file) {
+      throw new ErrorResponse("File not found", 400);
+    }
+    let result = cloudinary.uploader.upload(req.file.path);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { profilPicture: result.url },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Uploading profile pictute worked successfully",
+      updatedUser,
     });
   } catch (err) {
     next(err);
