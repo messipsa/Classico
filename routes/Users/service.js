@@ -147,15 +147,22 @@ export const sendURL = async (user) => {
 
 export const findAllUsers = async () => {
   try {
-    const users = await User.find()
+    const users = User.find()
+      .populate(
+        "followers",
+        "-__v -createdAt -updatedAt  -password -followers  -following -confirmationCode"
+      )
+      .populate(
+        "following",
+        "-__v -createdAt -updatedAt  -password -followers  -following -confirmationCode"
+      )
       .select({
         password: 0,
         confirmationCode: 0,
-      })
-      .populate({
-        path: "following",
-      })
-      .populate({ path: "followers" });
+        __v: 0,
+        createdAt: 0,
+        updatedAt: 0,
+      });
     return users;
   } catch (err) {
     throw new ErrorResponse(
@@ -168,10 +175,9 @@ export const findAllUsers = async () => {
 export const findUserByIdAndPopulate = async (id) => {
   try {
     const user = await User.findOne({ _id: id })
-      .populate({
-        path: "following",
-      })
-      .populate({ path: "followers" }); //.populate("followers");
+      .populate("following", "-password")
+      .populate("followers")
+      .select({ followers: 0 }, { following: 0 }, { bio: 0 });
     return user;
   } catch (err) {
     throw new ErrorResponse("Server Error", 500);
@@ -181,7 +187,6 @@ export const findUserByIdAndPopulate = async (id) => {
 export const updateBio = async (id, Bio) => {
   try {
     const user = await findUserById(id);
-    console.log(user);
     if (!user) {
       throw new ErrorResponse("User not found", 404);
     }
@@ -191,6 +196,30 @@ export const updateBio = async (id, Bio) => {
     if (err.statusCode === 404) {
       throw new ErrorResponse("User not found", 404);
     }
+    throw new ErrorResponse("Server Error", 500);
+  }
+};
+
+export const getUserNecessaryInformations = async (id) => {
+  try {
+    const user = User.findOne({ _id: id })
+      .populate(
+        "followers",
+        "-__v -createdAt -updatedAt  -password -followers  -following -confirmationCode"
+      )
+      .populate(
+        "following",
+        "-__v -createdAt -updatedAt  -password -followers  -following -confirmationCode"
+      )
+      .select({
+        password: 0,
+        confirmationCode: 0,
+        __v: 0,
+        createdAt: 0,
+        updatedAt: 0,
+      });
+    return user;
+  } catch (err) {
     throw new ErrorResponse("Server Error", 500);
   }
 };

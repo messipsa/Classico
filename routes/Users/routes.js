@@ -14,6 +14,7 @@ import {
   getUser,
   updateBiog,
   updateProfilPicture,
+  getFollowers,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -117,6 +118,13 @@ router.put(
   },
   ProfilPictureUpload.single("profilePic"),
   updateProfilPicture,
+  errorHandler
+);
+
+router.get(
+  "/followers/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  getFollowers,
   errorHandler
 );
 

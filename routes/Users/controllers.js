@@ -12,7 +12,7 @@ import {
   verifyPassword,
   createToken,
   findAllUsers,
-  findUserByIdAndPopulate,
+  getUserNecessaryInformations,
   updateBio,
 } from "./service.js";
 import { User } from "../../models/user.js";
@@ -275,7 +275,7 @@ export const getAllUsers = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
   try {
-    let user = await findUserByIdAndPopulate(req.params.id);
+    let user = await getUserNecessaryInformations(req.params.id);
     console.log(user);
     if (!user) {
       throw new ErrorResponse("User not found", 404);
@@ -331,7 +331,23 @@ export const updateProfilPicture = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Uploading profile pictute worked successfully",
+      message: "Uploading profile pictute completed successfully",
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getFollowers = async (req, res, next) => {
+  try {
+    const user = await getUserFollowers(req.params.id);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "getting user followers completed successfully",
       user,
     });
   } catch (err) {
