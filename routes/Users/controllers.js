@@ -283,16 +283,7 @@ export const getUser = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "getting user completed successfully",
-      user: lodash.pick(user, [
-        "userName",
-        "email",
-        "profilePic",
-        "role",
-        "verified",
-        "suspended",
-        "followers",
-        "following",
-      ]),
+      user,
     });
   } catch (err) {
     next(err);
@@ -348,6 +339,34 @@ export const getFollowers = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "getting user followers completed successfully",
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const changeUserName = async (req, res, next) => {
+  try {
+    let user = await getUserNecessaryInformations(req.params.id);
+
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    const name = await uniqueUserName(req.body.userName);
+    if (name) {
+      throw new ErrorResponse(
+        "an account already exists with this userName",
+        409
+      );
+    }
+    user.userName = req.body.userName;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "updating user name completed successfully",
       user,
     });
   } catch (err) {

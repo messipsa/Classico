@@ -14,7 +14,7 @@ import {
   getUser,
   updateBiog,
   updateProfilPicture,
-  getFollowers,
+  changeUserName,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -29,6 +29,7 @@ import {
   codeValidation,
   loginSchemaValidation,
   bioValidation,
+  userNameValidation,
 } from "../Users/schema.js";
 import { ProfilPictureUpload } from "../../core/multer.js";
 
@@ -110,22 +111,27 @@ router.put(
 );
 
 router.put(
+  "/updateName/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  validate(userNameValidation, ValidationSource.BODY),
+  changeUserName,
+  errorHandler
+);
+
+router.put(
   "/upload/profilepicture/:id",
   validate(idValidation, ValidationSource.PARAMS),
-  (req, res, next) => {
-    console.log(req.body);
-    next();
-  },
+
   ProfilPictureUpload.single("profilePic"),
   updateProfilPicture,
   errorHandler
 );
 
-router.get(
+/*router.get(
   "/followers/:id",
   validate(idValidation, ValidationSource.PARAMS),
   getFollowers,
   errorHandler
-);
+);*/
 
 export default router;
