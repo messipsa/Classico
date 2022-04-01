@@ -6,7 +6,7 @@ import { roleType } from "../../models/user.js";
 const validateObjectId = JoiObjectId(Joi);
 
 export const idValidation = Joi.object({
-  id: validateObjectId(),
+  id: validateObjectId().required(),
 });
 
 export const idValidationRequired = Joi.object({

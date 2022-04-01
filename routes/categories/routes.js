@@ -5,12 +5,12 @@ import { validate, ValidationSource } from "../../Utils/validate.js";
 import {
   getCategory,
   getCategories,
-  //addNewCategory,
-  //updateCategory,
+  addNewCategory,
+  updateCategory,
 } from "./controllers.js";
-import { idValidation } from "./schema.js";
+import { idValidation, nameValidation } from "./schema.js";
 
-router.get("", getCategories, errorHandler);
+router.get("/", getCategories, errorHandler);
 
 router.get(
   "/:id",
@@ -19,8 +19,19 @@ router.get(
   errorHandler
 );
 
-//router.post("/add", addNewCategory, errorHandler);
+router.post(
+  "/add",
+  validate(nameValidation, ValidationSource.BODY),
+  addNewCategory,
+  errorHandler
+);
 
-//router.put("/updateCategory", updateCategory, errorHandler);
+router.put(
+  "/updateCategory",
+  validate(idValidation, ValidationSource.PARAMS),
+  validate(nameValidation, ValidationSource.BODY),
+  updateCategory,
+  errorHandler
+);
 
 export default router;

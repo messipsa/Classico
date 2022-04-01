@@ -5,5 +5,9 @@ import JoiObjectId from "joi-objectid";
 const validateObjectId = JoiObjectId(Joi);
 
 export const idValidation = Joi.object({
-  id: validateObjectId(),
+  id: validateObjectId().required(),
+});
+
+export const nameValidation = Joi.object({
+  name: Joi.string().required(),
 });

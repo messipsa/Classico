@@ -18,3 +18,33 @@ export const getUserCategory = async (id) => {
     throw new ErrorResponse("Server Error", 500);
   }
 };
+
+export const getCategoryByName = async (name) => {
+  try {
+    return await Category.findOne({ name: name });
+  } catch (err) {
+    throw new ErrorResponse("Server Error", 500);
+  }
+};
+
+export const createNewCategory = async (name) => {
+  try {
+    return await Category.create({
+      name: name,
+    });
+  } catch (err) {
+    throw new ErrorResponse("Server Error", 500);
+  }
+};
+
+export const updateCategoryName = async (id, name) => {
+  try {
+    return await Category.findByIdAndUpdate(
+      { _id: id },
+      { name: name },
+      { new: true }
+    );
+  } catch (err) {
+    throw new ErrorResponse("Server Error", 500);
+  }
+};
