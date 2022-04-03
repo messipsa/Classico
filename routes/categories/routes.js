@@ -27,7 +27,7 @@ router.post(
 );
 
 router.put(
-  "/updateCategory",
+  "/updateCategory/:id",
   validate(idValidation, ValidationSource.PARAMS),
   validate(nameValidation, ValidationSource.BODY),
   updateCategory,

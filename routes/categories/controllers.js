@@ -62,9 +62,14 @@ export const addNewCategory = async (req, res, next) => {
 
 export const updateCategory = async (req, res, next) => {
   try {
-    let category = await getCategoryByName(req.body.name);
+    let category = await getUserCategory(req.params.id);
+    console.log(category);
     if (!category) {
       throw new ErrorResponse("Category not found", 404);
+    }
+    let categoryByName = await getCategoryByName(req.body.name);
+    if (categoryByName) {
+      throw new ErrorResponse("Category name already exists", 409);
     }
     let updatedCategory = await updateCategoryName(category._id, req.body.name);
     if (!updatedCategory) {
