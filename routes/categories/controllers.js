@@ -67,6 +67,7 @@ export const updateCategory = async (req, res, next) => {
     if (!category) {
       throw new ErrorResponse("Category not found", 404);
     }
+    a;
     let categoryByName = await getCategoryByName(req.body.name);
     if (categoryByName) {
       throw new ErrorResponse("Category name already exists", 409);
