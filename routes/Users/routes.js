@@ -16,6 +16,7 @@ import {
   updateProfilPicture,
   changeUserName,
   getFollowers,
+  getFollowing,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -132,6 +133,13 @@ router.get(
   "/followers/:id",
   validate(idValidation, ValidationSource.PARAMS),
   getFollowers,
+  errorHandler
+);
+
+router.get(
+  "/following/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  getFollowing,
   errorHandler
 );
 

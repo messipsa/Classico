@@ -248,3 +248,28 @@ export const getUserFollowers = async (id) => {
     throw new ErrorResponse("Server Error", 500);
   }
 };
+
+export const getUserFollowing = async (id) => {
+  try {
+    const user = User.findOne({ _id: id })
+      .populate(
+        "following",
+        "-__v -createdAt -updatedAt  -password -followers  -following -confirmationCode -verified -suspended -role"
+      )
+      .select({
+        password: 0,
+        confirmationCode: 0,
+        followers: 0,
+        role: 0,
+        verified: 0,
+        suspended: 0,
+        __v: 0,
+        createdAt: 0,
+        updatedAt: 0,
+      });
+
+    return user;
+  } catch (err) {
+    throw new ErrorResponse("Server Error", 500);
+  }
+};

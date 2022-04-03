@@ -15,6 +15,7 @@ import {
   getUserNecessaryInformations,
   updateBio,
   getUserFollowers,
+  getUserFollowing,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
@@ -340,6 +341,22 @@ export const getFollowers = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "getting user followers completed successfully",
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getFollowing = async (req, res, next) => {
+  try {
+    const user = await getUserFollowing(req.params.id);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "getting user following completed successfully",
       user,
     });
   } catch (err) {
