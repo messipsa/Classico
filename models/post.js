@@ -36,8 +36,21 @@ const postSchema = mongoose.Schema(
 
     category: {
       type: mongoose.Schema.Types.String,
-      ref: "category",
+      ref: "Category",
       required: true,
+    },
+
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+
+    pictures: {
+      type: [mongoose.Schema.Types.String],
+      required: true,
+      default: [],
     },
   },
   {

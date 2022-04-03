@@ -15,6 +15,7 @@ import {
   updateBiog,
   updateProfilPicture,
   changeUserName,
+  getFollowers,
 } from "./controllers.js";
 import {
   validateEmail,
@@ -127,11 +128,11 @@ router.put(
   errorHandler
 );
 
-/*router.get(
+router.get(
   "/followers/:id",
   validate(idValidation, ValidationSource.PARAMS),
   getFollowers,
   errorHandler
-);*/
+);
 
 export default router;

@@ -14,6 +14,7 @@ import {
   findAllUsers,
   getUserNecessaryInformations,
   updateBio,
+  getUserFollowers,
 } from "./service.js";
 import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
