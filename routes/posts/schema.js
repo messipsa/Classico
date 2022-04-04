@@ -11,3 +11,11 @@ export const postValidation = Joi.object({
   snippet: Joi.string().min(1).required(),
   title: Joi.string().min(1).required(),
 });
+
+export const idValidation = Joi.object({
+  id: validateObjectId().required(),
+});
+
+export const userIdValidation = Joi.object({
+  userId: validateObjectId().required(),
+});

@@ -42,11 +42,44 @@ const uploadImages = async (images) => {
 };
 
 export const getPosts = async () => {
-  const posts = await Post.find()
-    .populate("category", "-__v")
-    .populate(
-      "userId",
-      "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
-    );
-  return posts;
+  try {
+    const posts = await Post.find()
+      .populate("category", "-__v")
+      .populate(
+        "userId",
+        "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+      );
+    return posts;
+  } catch (err) {
+    throw new ErrorResponse("get posts failed due to server Error", 500);
+  }
+};
+
+export const getPostById = async (id) => {
+  try {
+    const post = await Post.findById(id)
+      .populate("category", "-__v")
+      .populate(
+        "userId",
+        "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+      );
+    return post;
+  } catch (err) {
+    throw new ErrorResponse("get post failed due to server Error", 500);
+  }
+};
+
+export const getPostByUserId = async (id) => {
+  try {
+    console.log(id);
+    const post = await Post.find({ userId: id })
+      .populate("category", "-__v")
+      .populate(
+        "userId",
+        "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+      );
+    return post;
+  } catch (err) {
+    throw new ErrorResponse("get post failed due to server Error", 500);
+  }
 };
