@@ -51,7 +51,6 @@ export const createUser = async (username, email, motDePasse) => {
     });
     return user;
   } catch (err) {
-    console.log(err);
     throw new ErrorResponse("User creation failed due to server Error", 500);
   }
 };
@@ -102,12 +101,9 @@ export const unfollowUser = async (id, idToFollow) => {
     if (user.following.includes(idToFollow)) {
       const utilisateur = await findUserById(idToFollow);
       user.following = user.following.filter((item) => {
-        console.log(item.toString());
         return item.toString() !== idToFollow;
       });
       utilisateur.followers = utilisateur.followers.filter((item) => {
-        console.log(item.toString());
-        console.log(item.toString() === id);
         return item.toString() !== id;
       });
       await user.save();

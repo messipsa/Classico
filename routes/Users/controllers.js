@@ -21,6 +21,8 @@ import { User } from "../../models/user.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
 import cloudinary from "../../core/cloudinary.js";
 
+//Login , Logout and register----------------------------------------------------------------------------------
+
 export const login = async (req, res, next) => {
   try {
     let user = await findUserByEmail(req.body.email);
@@ -116,6 +118,8 @@ export const register = async (req, res, next) => {
   }
 };
 
+//Suspend and Allow Accounts----------------------------------------------------------------------------------
+
 export const suspend = async (req, res, next) => {
   try {
     const user = await findUserById(req.params.id);
@@ -149,6 +153,8 @@ export const allow = async (req, res, next) => {
     next(err);
   }
 };
+
+//Follow and unfollow accounts-----------------------------------------------------------------------------
 
 export const follow = async (req, res, next) => {
   try {
@@ -211,6 +217,8 @@ export const unfollow = async (req, res, next) => {
   }
 };
 
+//Send confirmation email and verify account---------------------------------------------------------------------
+
 export const sendConfirmationEmail = async (req, res, next) => {
   try {
     const user = await findUserById(req.params.id);
@@ -259,6 +267,8 @@ export const verifyAccount = async (req, res, next) => {
   }
 };
 
+//get users (all , ById)-----------------------------------------------------------------------------------------
+
 export const getAllUsers = async (req, res, next) => {
   try {
     const users = await findAllUsers();
@@ -292,6 +302,8 @@ export const getUser = async (req, res, next) => {
   }
 };
 
+//Update Biography--------------------------------------------------------------------------------------
+
 export const updateBiog = async (req, res, next) => {
   try {
     const user = await updateBio(req.params.id, req.body.bio);
@@ -304,6 +316,8 @@ export const updateBiog = async (req, res, next) => {
     next(err);
   }
 };
+
+//Update user's profile picture ---------------------------------------------------------------------------------
 
 export const updateProfilPicture = async (req, res, next) => {
   try {
@@ -331,6 +345,8 @@ export const updateProfilPicture = async (req, res, next) => {
     next(err);
   }
 };
+
+//get user's followers and following------------------------------------------------------------------------------
 
 export const getFollowers = async (req, res, next) => {
   try {
@@ -363,6 +379,8 @@ export const getFollowing = async (req, res, next) => {
     next(err);
   }
 };
+
+//Change user name---------------------------------------------------------------------------
 
 export const changeUserName = async (req, res, next) => {
   try {

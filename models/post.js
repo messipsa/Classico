@@ -31,11 +31,11 @@ const postSchema = mongoose.Schema(
     nbLikes: {
       type: mongoose.Schema.Types.Number,
       required: true,
-      default: true,
+      default: 0,
     },
 
     category: {
-      type: mongoose.Schema.Types.String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
@@ -46,6 +46,12 @@ const postSchema = mongoose.Schema(
         ref: "Comment",
       },
     ],
+
+    nbComments: {
+      type: mongoose.Schema.Types.Number,
+      required: true,
+      default: 0,
+    },
 
     pictures: {
       type: [mongoose.Schema.Types.String],
