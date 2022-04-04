@@ -107,13 +107,11 @@ export const register = async (req, res, next) => {
       req.body.email,
       req.body.password
     );
-    console.log(usr);
-    //const user = await findB;
+
     return res
       .status(200)
       .json({ success: true, message: "user registration completed", usr });
   } catch (e) {
-    console.log("salim");
     next(e);
   }
 };
@@ -123,7 +121,7 @@ export const register = async (req, res, next) => {
 export const suspend = async (req, res, next) => {
   try {
     const user = await findUserById(req.params.id);
-    console.log(user);
+
     if (!user) {
       throw new ErrorResponse("User not found", 404);
     }
@@ -140,7 +138,7 @@ export const suspend = async (req, res, next) => {
 export const allow = async (req, res, next) => {
   try {
     const user = await findUserById(req.params.id);
-    console.log(user);
+
     if (!user) {
       throw new ErrorResponse("User not found", 404);
     }
@@ -170,9 +168,6 @@ export const follow = async (req, res, next) => {
     if (!utilisateur) {
       throw new ErrorResponse("user to follow not found", 404);
     }
-
-    console.log(user);
-    console.log(utilisateur);
 
     if (utilisateur === user) {
       throw new ErrorResponse("Impossible to auto follow your account", 409);
@@ -288,7 +283,7 @@ export const getAllUsers = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   try {
     let user = await getUserNecessaryInformations(req.params.id);
-    console.log(user);
+
     if (!user) {
       throw new ErrorResponse("User not found", 404);
     }
@@ -329,8 +324,6 @@ export const updateProfilPicture = async (req, res, next) => {
       throw new ErrorResponse("File not found", 400);
     }
     let result = await cloudinary.uploader.upload(req.file.path);
-
-    console.log(result);
 
     user.profilePic = result.url;
 

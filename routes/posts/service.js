@@ -9,9 +9,9 @@ export const createPost = async (postInput, images) => {
     const arrayOfUrls = await uploadImages(images);
     const post = await Post.create({
       userId: postInput.userId,
-      title: "kARIM HENDAOUI",
-      snippet: "karim",
-      body: "Bst Egyprian Goalkeeper",
+      title: postInput.title,
+      snippet: postInput.snippet,
+      body: postInput.body,
       category: postInput.category,
       likers: [],
       nbLikes: 0,
@@ -39,4 +39,14 @@ const uploadImages = async (images) => {
   } catch (err) {
     throw new ErrorResponse("Images upload failed due to server Error", 500);
   }
+};
+
+export const getPosts = async () => {
+  const posts = await Post.find()
+    .populate("category", "-__v")
+    .populate(
+      "userId",
+      "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+    );
+  return posts;
 };

@@ -1,14 +1,12 @@
 import path from "path";
 import { Post } from "../../models/post.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
-import { createPost } from "./service.js";
+import { createPost, getPosts } from "./service.js";
 import { findUserById } from "../Users/service.js";
 import { getUserCategory } from "../categories/service.js";
 
 export const addNewPost = async (req, res, next) => {
   try {
-    console.log(req.body.userId + "    ci joint");
-
     const user = await findUserById(req.body.userId);
     if (!user) {
       throw new ErrorResponse("User not found", 404);
@@ -26,6 +24,22 @@ export const addNewPost = async (req, res, next) => {
     res
       .status(200)
       .json({ success: true, message: "post created successfully", post });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllPosts = async (req, res, next) => {
+  try {
+    const posts = await getPosts();
+    if (!posts) {
+      throw new ErrorResponse("No posts found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "getting all posts completed successfully",
+      posts,
+    });
   } catch (err) {
     next(err);
   }

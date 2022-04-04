@@ -63,7 +63,7 @@ export const addNewCategory = async (req, res, next) => {
 export const updateCategory = async (req, res, next) => {
   try {
     let category = await getUserCategory(req.params.id);
-    console.log(category);
+
     if (!category) {
       throw new ErrorResponse("Category not found", 404);
     }
