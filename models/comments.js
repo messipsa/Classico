@@ -18,6 +18,9 @@ const commentSchema = mongoose.Schema(
       minLength: 1,
       required: true,
     },
+    picture: {
+      type: mongoose.Schema.Types.String,
+    },
   },
   {
     timestamps: true,

@@ -6,6 +6,8 @@ import {
   getPosts,
   getPostById,
   getPostByUserId,
+  like_Post,
+  unlike_Post,
 } from "./service.js";
 import { findUserById } from "../Users/service.js";
 import { getUserCategory } from "../categories/service.js";
@@ -68,7 +70,6 @@ export const getPost_Id = async (req, res, next) => {
 
 export const getPost_UserId = async (req, res, next) => {
   try {
-    console.log(req.params.userId);
     const user = await findUserById(req.params.userId);
     if (!user) {
       throw new ErrorResponse("User not found", 404);
@@ -80,6 +81,59 @@ export const getPost_UserId = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "getting user's posts completed successfully",
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const likePost = async (req, res, next) => {
+  try {
+    let post = await getPostById(req.params.id);
+    if (!post) {
+      throw new ErrorResponse("post not found", 404);
+    }
+
+    const user = await findUserById(req.body.userId);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    if (post.likers.includes(req.body.userId)) {
+      throw new ErrorResponse("Impossible to like a post already liked", 409);
+    }
+    post = await like_Post(post, user._id);
+    res.status(200).json({
+      success: true,
+      message: "Post liked successfully",
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const unlikePost = async (req, res, next) => {
+  try {
+    let post = await getPostById(req.params.id);
+    if (!post) {
+      throw new ErrorResponse("post not found", 404);
+    }
+
+    const user = await findUserById(req.body.userId);
+    if (!user) {
+      throw new ErrorResponse("User not found", 404);
+    }
+    if (!post.likers.includes(req.body.userId)) {
+      throw new ErrorResponse(
+        "Impossible to remove like from a post not already liked",
+        409
+      );
+    }
+    post = await unlike_Post(post, user._id);
+    res.status(200).json({
+      success: true,
+      message: "Post liked successfully",
       post,
     });
   } catch (err) {

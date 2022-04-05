@@ -83,3 +83,39 @@ export const getPostByUserId = async (id) => {
     throw new ErrorResponse("get post failed due to server Error", 500);
   }
 };
+
+export const like_Post = async (post, userId) => {
+  try {
+    const postLiked = await Post.findByIdAndUpdate(
+      post._id,
+      { $push: { likers: userId }, nbLikes: post.nbLikes + 1 },
+      { new: true }
+    );
+
+    return postLiked;
+  } catch (err) {
+    throw new ErrorResponse("like post failed due to server Error", 500);
+  }
+};
+
+export const unlike_Post = async (post, userId) => {
+  try {
+    const postUnLiked = await Post.findByIdAndUpdate(
+      post._id,
+      {
+        likers: post.likers.filter((e) => {
+          return String(e) !== String(userId);
+        }),
+        nbLikes: post.nbLikes - 1,
+      },
+      { new: true }
+    );
+
+    return postUnLiked;
+  } catch (err) {
+    throw new ErrorResponse(
+      "remove like from post failed due to server Error",
+      500
+    );
+  }
+};

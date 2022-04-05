@@ -7,6 +7,8 @@ import {
   getAllPosts,
   getPost_Id,
   getPost_UserId,
+  likePost,
+  unlikePost,
 } from "./controllers.js";
 import { validate, ValidationSource } from "../../Utils/validate.js";
 import { postValidation, idValidation, userIdValidation } from "./schema.js";
@@ -33,6 +35,22 @@ router.get(
 
   validate(userIdValidation, ValidationSource.PARAMS),
   getPost_UserId,
+  errorHandler
+);
+
+router.put(
+  "/likepost/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  validate(userIdValidation, ValidationSource.BODY),
+  likePost,
+  errorHandler
+);
+
+router.put(
+  "/unlikepost/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  validate(userIdValidation, ValidationSource.BODY),
+  unlikePost,
   errorHandler
 );
 
