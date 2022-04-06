@@ -34,10 +34,4 @@ router.put(
   errorHandler
 );
 
-router.put(
-  "like/:id",
-  validate(idValidation, ValidationSource.PARAMS),
-  errorHandler
-);
-
 export default router;

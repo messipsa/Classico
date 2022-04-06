@@ -140,3 +140,10 @@ export const unlikePost = async (req, res, next) => {
     next(err);
   }
 };
+
+export const commentPost = async (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+};

@@ -7,12 +7,7 @@ const commentSchema = mongoose.Schema(
       ref: "Utilisateur",
       required: true,
     },
-    commenterUserName: {
-      type: mongoose.Schema.Types.String,
-      minlength: 4,
-      maxlength: 255,
-      required: true,
-    },
+
     text: {
       type: mongoose.Schema.Types.String,
       minLength: 1,
