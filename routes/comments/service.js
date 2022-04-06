@@ -1,23 +1,22 @@
 import { Comment } from "../../models/comments.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
 import cloudinary from "../../core/cloudinary.js";
+import { Post } from "../../models/post.js";
 
 export const addNewComment = async (commentaire, image) => {
   try {
     let comment;
-    console.log(image);
+
     if (!image) {
-      console.log("le mafihachisme");
       comment = await Comment.create({
         commenterId: commentaire.userId,
         text: commentaire.text,
         picture: "",
       });
-      console.log("kelb raged");
-      console.log(comment);
+
       return comment;
     }
-    console.log("le fihachisme");
+
     let result = await uploadImage(image);
     comment = await Comment.create({
       commenterId: commentaire.userId,
@@ -35,12 +34,40 @@ export const addNewComment = async (commentaire, image) => {
 
 const uploadImage = async (image) => {
   try {
-    console.log(image);
     let result = await cloudinary.uploader.upload(image.path);
-    console.log("akhla9i");
-    console.log(result);
+
     return result;
   } catch (err) {
     throw new ErrorResponse("uploading image failed due to server error", 500);
+  }
+};
+
+export const pushCommentId = async (post, commentId) => {
+  try {
+    const postCommented = await Post.findByIdAndUpdate(
+      post._id,
+      { $push: { comments: commentId }, nbComments: post.nbComments + 1 },
+      { new: true }
+    );
+    return postCommented;
+  } catch (err) {
+    throw new ErrorResponse(
+      "pushing comment id in post failed due to server error",
+      500
+    );
+  }
+};
+
+export const removeCommentFromArray = async (post, user) => {
+  try {
+  } catch (err) {
+    throw new ErrorResponse("deleting comment failed due to server error", 500);
+  }
+};
+
+export const deleteCommentFromComments = async (post, user) => {
+  try {
+  } catch (err) {
+    throw new ErrorResponse("deleting comment failed due to server error", 500);
   }
 };
