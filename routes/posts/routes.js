@@ -7,6 +7,7 @@ import {
   getAllPosts,
   getPost_Id,
   getPost_UserId,
+  getCommentsOfPost,
   likePost,
   unlikePost,
 } from "./controllers.js";
@@ -35,6 +36,13 @@ router.get(
 
   validate(userIdValidation, ValidationSource.PARAMS),
   getPost_UserId,
+  errorHandler
+);
+
+router.get(
+  "/comments/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  getCommentsOfPost,
   errorHandler
 );
 

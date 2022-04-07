@@ -48,7 +48,13 @@ export const getPosts = async () => {
       .populate(
         "userId",
         "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
-      );
+      )
+      .populate(
+        "likers",
+        "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+      )
+      .populate("comments");
+
     return posts;
   } catch (err) {
     throw new ErrorResponse("get posts failed due to server Error", 500);
@@ -62,7 +68,12 @@ export const getPostById = async (id) => {
       .populate(
         "userId",
         "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
-      );
+      )
+      .populate(
+        "likers",
+        "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+      )
+      .populate("comments");
     return post;
   } catch (err) {
     throw new ErrorResponse("get post failed due to server Error", 500);
@@ -77,10 +88,27 @@ export const getPostByUserId = async (id) => {
       .populate(
         "userId",
         "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
-      );
+      )
+      .populate(
+        "likers",
+        "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+      )
+      .populate("comments");
     return post;
   } catch (err) {
     throw new ErrorResponse("get post failed due to server Error", 500);
+  }
+};
+
+export const getPostComments = async (id) => {
+  try {
+    const post = await Post.findById(id).populate("comments");
+    return post;
+  } catch (err) {
+    throw new ErrorResponse(
+      "getting post's comments failed due to server error",
+      500
+    );
   }
 };
 

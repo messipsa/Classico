@@ -8,6 +8,7 @@ import {
   getPostByUserId,
   like_Post,
   unlike_Post,
+  getPostComments,
 } from "./service.js";
 import { findUserById } from "../Users/service.js";
 import { getUserCategory } from "../categories/service.js";
@@ -84,6 +85,22 @@ export const getPost_UserId = async (req, res, next) => {
       post,
     });
   } catch (err) {
+    next(err);
+  }
+};
+
+export const getCommentsOfPost = async (req, res, next) => {
+  try {
+    const post = await getPostComments(req.params.id);
+    if (!post) {
+      throw new ErrorResponse("Post not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "getting post's comments completed successfully",
+      comments: post.comments,
+    });
+  } catch {
     next(err);
   }
 };
