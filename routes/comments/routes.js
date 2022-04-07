@@ -4,8 +4,12 @@ const router = express.Router();
 import { commentPicturesUpload } from "../../core/multer.js";
 import { errorHandler } from "../../Middlewares/error.js";
 import { validate, ValidationSource } from "../../Utils/validate.js";
-import { addComment } from "./controllers.js";
-import { commentValidation, idValidation } from "./schema.js";
+import { addComment, deleteComment } from "./controllers.js";
+import {
+  commentValidation,
+  idValidation,
+  commentIdValidation,
+} from "./schema.js";
 import { userIdValidation } from "../posts/schema.js";
 
 router.put(
@@ -19,8 +23,10 @@ router.put(
 
 router.delete(
   "/removecomment/:id",
+
   validate(idValidation, ValidationSource.PARAMS),
-  validate(userIdValidation, ValidationSource.BODY),
+  validate(commentIdValidation, ValidationSource.BODY),
+  deleteComment,
   errorHandler
 );
 

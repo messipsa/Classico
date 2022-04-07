@@ -3,6 +3,15 @@ import ErrorResponse from "../../Utils/errorResponse.js";
 import cloudinary from "../../core/cloudinary.js";
 import { Post } from "../../models/post.js";
 
+export const findCommentById = async (id) => {
+  try {
+    const comment = Comment.findById(id);
+    return comment;
+  } catch (err) {
+    throw new ErrorResponse("getting comment failed due to server error", 500);
+  }
+};
+
 export const addNewComment = async (commentaire, image) => {
   try {
     let comment;
@@ -58,15 +67,27 @@ export const pushCommentId = async (post, commentId) => {
   }
 };
 
-export const removeCommentFromArray = async (post, user) => {
+export const removeCommentFromArray = async (post, commentId) => {
   try {
+    const postRemoved = await Post.findByIdAndUpdate(
+      post._id,
+      {
+        comments: post.comments.filter((e) => {
+          return String(e) !== String(commentId);
+        }),
+        nbComments: post.nbComments - 1,
+      },
+      { new: true }
+    );
+    return postRemoved;
   } catch (err) {
     throw new ErrorResponse("deleting comment failed due to server error", 500);
   }
 };
 
-export const deleteCommentFromComments = async (post, user) => {
+export const deleteCommentFromComments = async (commentId) => {
   try {
+    await Comment.findByIdAndDelete(commentId);
   } catch (err) {
     throw new ErrorResponse("deleting comment failed due to server error", 500);
   }
