@@ -3,9 +3,24 @@ import ErrorResponse from "../../Utils/errorResponse.js";
 import cloudinary from "../../core/cloudinary.js";
 import { Post } from "../../models/post.js";
 
+export const findAllComments = async () => {
+  try {
+    const comment = Comment.find();
+    return comment;
+  } catch (err) {
+    throw new ErrorResponse(
+      "getting all comment failed due to server error",
+      500
+    );
+  }
+};
+
 export const findCommentById = async (id) => {
   try {
-    const comment = Comment.findById(id);
+    const comment = Comment.findById(id).populate(
+      "commenterId",
+      "-followers -following -password -verified -suspended -role -confirmationCode -createdAt -updatedAt -__v"
+    );
     return comment;
   } catch (err) {
     throw new ErrorResponse("getting comment failed due to server error", 500);

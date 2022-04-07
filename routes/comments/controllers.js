@@ -7,7 +7,37 @@ import {
   findCommentById,
   deleteCommentFromComments,
   removeCommentFromArray,
+  findAllComments,
 } from "./service.js";
+
+export const getAllComments = async (req, res, next) => {
+  try {
+    const comments = await findAllComments();
+    res.status(200).json({
+      success: true,
+      message: "getting all comments completed successfully",
+      comments,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getComment = async (req, res, next) => {
+  try {
+    const comment = await findCommentById(req.params.id);
+    if (!comment) {
+      throw new ErrorResponse("Comment not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "getting comment completed successfully",
+      comment,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const addComment = async (req, res, next) => {
   try {
