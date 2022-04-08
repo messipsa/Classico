@@ -10,6 +10,7 @@ import {
   getCommentsOfPost,
   likePost,
   unlikePost,
+  deletePost,
 } from "./controllers.js";
 import { validate, ValidationSource } from "../../Utils/validate.js";
 import { postValidation, idValidation, userIdValidation } from "./schema.js";
@@ -59,6 +60,13 @@ router.put(
   validate(idValidation, ValidationSource.PARAMS),
   validate(userIdValidation, ValidationSource.BODY),
   unlikePost,
+  errorHandler
+);
+
+router.delete(
+  "/delete/:id",
+  validate(idValidation, ValidationSource.PARAMS),
+  deletePost,
   errorHandler
 );
 

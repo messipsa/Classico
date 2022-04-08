@@ -9,6 +9,7 @@ import {
   like_Post,
   unlike_Post,
   getPostComments,
+  removePost,
 } from "./service.js";
 import { findUserById } from "../Users/service.js";
 import { getUserCategory } from "../categories/service.js";
@@ -158,8 +159,16 @@ export const unlikePost = async (req, res, next) => {
   }
 };
 
-export const commentPost = async (req, res, next) => {
+export const deletePost = async (req, res, next) => {
   try {
+    const post = await getPostById(req.params.id);
+    if (!post) {
+      throw new ErrorResponse("post not found", 404);
+    }
+    await removePost(post);
+    res
+      .status(200)
+      .json({ success: true, message: "post deleted successfully" });
   } catch (err) {
     next(err);
   }

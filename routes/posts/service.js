@@ -1,6 +1,7 @@
 import { Post } from "../../models/post.js";
 import ErrorResponse from "../../Utils/errorResponse.js";
 import cloudinary from "../../core/cloudinary.js";
+import { deleteCommentFromComments } from "../comments/service.js";
 
 export const createPost = async (postInput, images) => {
   try {
@@ -145,5 +146,18 @@ export const unlike_Post = async (post, userId) => {
       "remove like from post failed due to server Error",
       500
     );
+  }
+};
+
+export const removePost = async (post) => {
+  try {
+    if (post.comments.length > 0) {
+      for (let i = 0; i < post.comments.length; i++) {
+        await deleteCommentFromComments(post.comments[i]);
+      }
+    }
+    await Post.findByIdAndDelete(post._id);
+  } catch (err) {
+    throw new ErrorResponse("deleting post failed due to server error ", 500);
   }
 };
